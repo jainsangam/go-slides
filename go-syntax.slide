@@ -1,4 +1,73 @@
-Go Syntax for Beginners
-18:00 03 Sep 2017
-Tags: go
+Go Basics
+03 Sep 2017
 
+Sangam Kumar Jain
+https://github.com/jainsangam/go-slides
+
+
+* packages & import
+
+- every go program is made up of packages
+- programs start running in package main ( function main() )
+- by convention, the package name is the same as the last element of the import path
+- for instance, the "fmt" packages comprises of files that starts with package "fmt"
+
+.code /code/package/basic.go
+
+- public variables & functions of a package should start with capital case character ( for e.g:  _Println_ in _fmt_ package )
+
+* code organization
+
+- all go codes are typically kept in a single workspace.
+- a workspace contains many repositories from different vcs ( e.g.: git )
+- each repository contains one or more packages.
+- the path to a package's directory determines its import path.
+
+- a workspace is a directory hierarchy with three directories at its root:
+
+  src contains Go source files,
+  pkg contains package objects, and
+  bin contains executable commands.
+
+- the go tool builds source packages and installs the resulting binaries to the pkg and bin directories.
+- the src subdirectory typically contains multiple version control repositories (such as for git or mercurial).
+
+*
+    bin/
+        hello                          # command executable
+        outyet                         # command executable
+    pkg/
+        linux_amd64/
+            github.com/golang/example/
+                stringutil.a           # package object
+    src/
+        github.com/golang/example/
+            .git/                      # Git repository metadata
+        hello/
+            hello.go               # command source
+        outyet/
+            main.go                # command source
+            main_test.go           # test source
+        stringutil/
+            reverse.go             # package source
+            reverse_test.go        # test source
+        golang.org/x/image/
+            .git/                      # Git repository metadata
+        bmp/
+            reader.go              # package source
+            writer.go              # package source
+        ... (many more repositories and packages omitted) ...
+
+* build & installation
+
+* variable & function
+
+* flow control if..else ,for , switch & defer
+
+* more Type structs, slices and maps
+
+* resources
+
+- https://golang.org/doc/install
+- https://golang.org/doc/code.html
+- https://tour.golang.org
