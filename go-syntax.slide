@@ -5,12 +5,21 @@ Anuj Agrawal
 Sangam Kumar Jain
 
 
+* what will be covered
+
+- packages & import
+- code organization
+- build & installation
+- function & variable
+- flow control if..else ,for , switch & defer
+- more type structs, slices and maps
+
 * packages & import
 
 - every go program is made up of packages
 - programs start running in package main ( function main() )
 
-.code /code/package/basic.go
+.play /code/package/basic.go
 
 - by convention, the package name is the same as the last element of the import path
 - for instance, the "fmt" packages comprises of files that starts with package "fmt"
@@ -74,7 +83,7 @@ Sangam Kumar Jain
 
 - create a file named hello.go inside that directory, containing the following Go code.
 
-.code /code/package/basic.go
+.play /code/package/basic.go
 
 - now you can build and install that program with the go tool:
   $ go install github.com/user/hello
@@ -90,7 +99,7 @@ Sangam Kumar Jain
 - the first step is to choose a package path (we'll use github.com/user/stringutil) and create the package directory:
   $ mkdir $GOPATH/src/github.com/user/stringutil
 - create a file named reverse.go in that directory with the following contents.
-.code /code/stringutil/reverse.go
+.play /code/stringutil/reverse.go
 
 - now, test that the package compiles with go build:
   $ go build github.com/user/stringutil
@@ -98,7 +107,7 @@ Sangam Kumar Jain
 * 
 - this won't produce an output file. to do that, you must use go install, which places the package object inside the pkg directory of the workspace.
 - after confirming that the stringutil package builds, modify your original hello.go (which is in $gopath/src/github.com/user/hello) to use it:
-.code /code/package/usage.go
+.play /code/package/usage.go
 
 - whenever the go tool installs a package or binary, it also installs whatever dependencies it has. so when you install the hello program
   $ go install github.com/user/hello
@@ -132,14 +141,14 @@ Sangam Kumar Jain
 - go's return values may be named. if so, they are treated as variables defined at the top of the function.these names should be used to document the meaning of the return values.
 
 * 
-.code code/package/function.go
+.play code/package/function.go
 
 * 
 - the var statement declares a list of variables; as in function argument lists, the type is last.
 - a var declaration can include initializers, one per variable.
 - inside a function, the := short assignment statement can be used in place of a var declaration with implicit type.
 
-.code code/package/var.go
+.play code/package/var.go
 
 * 
 - go's basic types are
@@ -197,7 +206,7 @@ Go has only one looping construct, the for loop.
 - the init and post statement are optional. in case both the statements are not required semicolons can be dropped. 
 
 * 
-.code code/package/for.go
+.play code/package/for.go
 
 * if else
 - go's if statements are like its for loops; the expression need not be surrounded by parentheses ( ) but the braces { } are required.
@@ -206,14 +215,14 @@ Go has only one looping construct, the for loop.
 - variables declared inside an if short statement are also available inside any of the else blocks.
 
 * 
-.code code/package/if.go
+.play code/package/if.go
 
 * switch
 - switch cases evaluate cases from top to bottom, stopping when a case succeeds.
 - a case body breaks automatically, unless it ends with a fallthrough statement.
 - switch without a condition is the same as switch true.
 
-.code code/package/switch.go
+.play code/package/switch.go
 
 * defer
 
@@ -221,7 +230,7 @@ Go has only one looping construct, the for loop.
 - the deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
 - when a function returns, its deferred calls are executed in last-in-first-out order.
 
-.code code/package/defer.go
+.play code/package/defer.go
 
 * more type structs, slices and maps
 
@@ -229,7 +238,7 @@ Go has only one looping construct, the for loop.
 - struct fields are accessed using a dot.
 - struct fields can be accessed through a struct pointer.
 
-.code code/package/struct.go
+.play code/package/struct.go
 
 * slice
 - the type [n]t is an array of n values of type t.
@@ -241,10 +250,10 @@ Go has only one looping construct, the for loop.
 - new element can be appended to a slice using append function (if the backing array of s is too small to fit all the given values a bigger array will be allocated. the returned slice will point to the newly allocated array)
 
 * 
-.code code/package/slice.go
+.play code/package/slice.go
 
 * 
-.code code/package/slice2.go
+.play code/package/slice2.go
 
 * map
 - a map maps keys to values.the make function returns a map of the given type, initialized and ready for use.
@@ -259,13 +268,13 @@ Go has only one looping construct, the for loop.
     elem, ok = m[key] // if key is in m, ok is true. if not, ok is false.
 
 * 
-.code code/package/map.go
+.play code/package/map.go
 
 * range
 - the range form of the for loop iterates over a slice or map.
 - when ranging over a slice, two values are returned for each iteration. the first is the index, and the second is a copy of the element at that index.
 
-.code code/package/range.go
+.play code/package/range.go
 * resources
 
 - https://golang.org/doc/install

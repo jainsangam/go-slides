@@ -7,7 +7,7 @@ import (
 
 func main() {
 	t := time.Now()
-	switch {	// empty condition can be replaced with switch _some_statement_ {
+	switch {	// empty condition can be replaced with switch _some_expression_ {
 	case t.Hour() < 12:
 		fmt.Println("Good morning!")
 	case t.Hour() < 17:
