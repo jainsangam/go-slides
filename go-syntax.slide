@@ -9,10 +9,12 @@ Sangam Kumar Jain
 
 - every go program is made up of packages
 - programs start running in package main ( function main() )
+
+.code /code/package/basic.go
+
 - by convention, the package name is the same as the last element of the import path
 - for instance, the "fmt" packages comprises of files that starts with package "fmt"
 
-.code /code/package/basic.go
 
 - public variables & functions of a package should start with capital case character ( for e.g:  _Println_ in _fmt_ package )
 
@@ -32,7 +34,7 @@ Sangam Kumar Jain
 - the go tool builds source packages and installs the resulting binaries to the pkg and bin directories.
 - the src subdirectory typically contains multiple version control repositories (such as for git or mercurial).
 
-*
+* 
     bin/
         hello                          # command executable
         outyet                         # command executable
@@ -62,11 +64,11 @@ Sangam Kumar Jain
 
 - the GOPATH environment variable specifies the location of your workspace.
 - an import path is a string that uniquely identifies a package. a package's import path corresponds to its location inside a workspace or in a remote repository
-- the packages from the standard library are given short import paths such as "fmt" and "net/http".
+- the packages from the standard library are given short import paths such as "fmt" and "net/http". these libraries are located at $GOROOT/src
 - we should select a base path that is unlikely to collide with future additions to the standard library or other external libraries.
 - if you keep your code in a source repository somewhere, then you should use the root of that source repository as your base path. for instance, if you have a github account at github.com/user, that should be your base path.
 
-*
+* 
 - to compile and run a simple program, first choose a package path (we'll use github.com/user/hello) and create a corresponding package directory inside your workspace:
   $ mkdir $GOPATH/src/github.com/user/hello
 
@@ -77,17 +79,193 @@ Sangam Kumar Jain
 - now you can build and install that program with the go tool:
   $ go install github.com/user/hello
 
-*
-- this command builds the hello command, producing an executable binary. it then installs that binary to the workspace's bin directory as hello (or, under windows, hello.exe). in our example, that will be $gopath/bin/hello, which is $home/go/bin/hello.
+* 
+- this command builds the hello command, producing an executable binary. it then installs that binary to the workspace's bin directory as hello. in our example, that will be $GOPATH/bin/hello.
 - you can now run the program by typing its full path at the command line:
+  $ GOPATH/bin/hello
+  Hello, world.
 
+* 
+- let's write a library and use it from the hello program.
+- the first step is to choose a package path (we'll use github.com/user/stringutil) and create the package directory:
+  $ mkdir $GOPATH/src/github.com/user/stringutil
+- create a file named reverse.go in that directory with the following contents.
+.code /code/stringutil/reverse.go
 
-* variable & function
+- now, test that the package compiles with go build:
+  $ go build github.com/user/stringutil
+
+* 
+- this won't produce an output file. to do that, you must use go install, which places the package object inside the pkg directory of the workspace.
+- after confirming that the stringutil package builds, modify your original hello.go (which is in $gopath/src/github.com/user/hello) to use it:
+.code /code/package/usage.go
+
+- whenever the go tool installs a package or binary, it also installs whatever dependencies it has. so when you install the hello program
+  $ go install github.com/user/hello
+
+* 
+- the _stringutil_ package will be installed as well, automatically. running the new version of the program, you should see a new, reversed message:
+  $ hello
+  Hello, Go!
+
+- after the steps above, your workspace should look like this:
+
+    bin/
+        hello                 # command executable
+    pkg/
+        linux_amd64/          # this will reflect your OS and architecture
+            github.com/user/
+                stringutil.a  # package object
+    src/
+        github.com/user/
+            hello/
+                hello.go      # command source
+            stringutil/
+                reverse.go    # package source
+               
+
+* function & variable
+
+- a function can take zero or more arguments.
+- a function can return any number of results.
+- when two or more consecutive named function parameters share a type, you can omit the type from all but the last.
+- go's return values may be named. if so, they are treated as variables defined at the top of the function.these names should be used to document the meaning of the return values.
+
+* 
+.code code/package/function.go
+
+* 
+- the var statement declares a list of variables; as in function argument lists, the type is last.
+- a var declaration can include initializers, one per variable.
+- inside a function, the := short assignment statement can be used in place of a var declaration with implicit type.
+
+.code code/package/var.go
+
+* 
+- go's basic types are
+
+    bool
+
+    string
+
+    int  int8  int16  int32  int64
+    uint uint8 uint16 uint32 uint64 uintptr
+
+    byte // alias for uint8
+
+    rune // alias for int32
+         // represents a Unicode code point
+
+    float32 float64
+
+    complex64 complex128
+
+- variables declared without an explicit initial value are given their zero value.
+
+  0 for numeric types,
+  false for the boolean type, and
+  "" (the empty string) for strings.
+
+* 
+- the expression t(v) converts the value v to the type t.
+
+    var i int = 42
+    var f float64 = float64(i)
+    var u uint = uint(f)
+
+- when declaring a variable without specifying an explicit type (either by using the := syntax or var = expression syntax), the variable's type is inferred from the value on the right hand side.
+    var i int
+    j := i // j is an int
+
+- but when the right hand side contains an untyped numeric constant, the new variable may be an int, float64, or complex128 depending on the precision of the constant:
+
+    i := 42           // int
+    f := 3.142        // float64
+    g := 0.867 + 0.5i // complex128
 
 * flow control if..else ,for , switch & defer
 
-* more Type structs, slices and maps
+Go has only one looping construct, the for loop.
 
+- the basic for loop has three components separated by semicolons:
+    the init statement: executed before the first iteration
+    the condition expression: evaluated before every iteration
+    the post statement: executed at the end of every iteration
+- the init statement will often be a short variable declaration, and the variables declared there are visible only in the scope of the for statement.
+- the loop will stop iterating once the boolean condition evaluates to false.
+
+- the init and post statement are optional. in case both the statements are not required semicolons can be dropped. 
+
+* 
+.code code/package/for.go
+
+* if else
+- go's if statements are like its for loops; the expression need not be surrounded by parentheses ( ) but the braces { } are required.
+- like for, the if statement can start with a short statement to execute before the condition. 
+- variables declared by the statement are only in scope until the end of the if.
+- variables declared inside an if short statement are also available inside any of the else blocks.
+
+* 
+.code code/package/if.go
+
+* switch
+- switch cases evaluate cases from top to bottom, stopping when a case succeeds.
+- a case body breaks automatically, unless it ends with a fallthrough statement.
+- switch without a condition is the same as switch true.
+
+.code code/package/switch.go
+
+* defer
+
+- a defer statement defers the execution of a function until the surrounding function returns.
+- the deferred call's arguments are evaluated immediately, but the function call is not executed until the surrounding function returns.
+- when a function returns, its deferred calls are executed in last-in-first-out order.
+
+.code code/package/defer.go
+
+* more type structs, slices and maps
+
+- a struct is a collection of fields.
+- struct fields are accessed using a dot.
+- struct fields can be accessed through a struct pointer.
+
+.code code/package/struct.go
+
+* slice
+- the type [n]t is an array of n values of type t.
+- an array has a fixed size. a slice, on the other hand, is a dynamically-sized, flexible view into the elements of an array. in practice, slices are much more common than arrays.
+- the type []t is a slice with elements of type t
+- a slice does not store any data, it just describes a section of an underlying array. changing the elements of a slice modifies the corresponding elements of its underlying array.
+- a slice has both a length and a capacity, it can be obtained using the expressions len(s) and cap(s).
+- slices can be created with the built-in make function
+- new element can be appended to a slice using append function (if the backing array of s is too small to fit all the given values a bigger array will be allocated. the returned slice will point to the newly allocated array)
+
+* 
+.code code/package/slice.go
+
+* 
+.code code/package/slice2.go
+
+* map
+- a map maps keys to values.the make function returns a map of the given type, initialized and ready for use.
+- the zero value of a map is nil. a nil map has no keys, nor can keys be added.
+- insert or update an element in map m:
+    m[key] = elem
+- retrieve an element:
+    elem = m[key]
+- delete an element:
+    delete(m, key)
+- test that a key is present with a two-value assignment:
+    elem, ok = m[key] // if key is in m, ok is true. if not, ok is false.
+
+* 
+.code code/package/map.go
+
+* range
+- the range form of the for loop iterates over a slice or map.
+- when ranging over a slice, two values are returned for each iteration. the first is the index, and the second is a copy of the element at that index.
+
+.code code/package/range.go
 * resources
 
 - https://golang.org/doc/install
